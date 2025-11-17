@@ -6,8 +6,19 @@ const NOTES_KEY = "led-calculator-notes-v1";
 const USERS_KEY = "led-calculator-users-v1";
 const ACTIVE_USER_KEY = "led-calculator-active-user";
 const HISTORY_KEY = "led-calculator-history-v1";
-const SAVE_API_URL = "http://127.0.0.1:5000/api/save";
 const EXCHANGE_RATE_DEFAULT = 83.44;
+
+// API URLs - автоматически определяется по текущему домену
+const API_BASE_URL = window.location.origin;
+const EXCHANGE_RATE_API_URL = `${API_BASE_URL}/api/exchange-rate`;
+const LOGISTICS_API_URL = `${API_BASE_URL}/api/logistics`;
+
+// Логирование URL для отладки
+console.log("API URLs:", {
+  base: API_BASE_URL,
+  exchangeRate: EXCHANGE_RATE_API_URL,
+  logistics: LOGISTICS_API_URL
+});
 
 const integerFormatter = new Intl.NumberFormat("ru-RU", {
   maximumFractionDigits: 0,
@@ -2940,7 +2951,7 @@ async function loadLogisticsFromAPI(deliveryCity, weightKg, declaredValue) {
   try {
     console.log("Запрос логистики для города:", deliveryCity, "вес:", weightKg, "кг, стоимость:", declaredValue, "руб.");
     
-    const response = await fetch("http://127.0.0.1:5000/api/logistics", {
+    const response = await fetch(LOGISTICS_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -2982,7 +2993,7 @@ async function loadLogisticsFromAPI(deliveryCity, weightKg, declaredValue) {
     console.error("Ошибка в loadLogisticsFromAPI:", error);
     
     if (error.message && error.message.includes("Failed to fetch")) {
-      throw new Error("API сервер недоступен. Убедитесь, что Flask API сервер запущен на http://127.0.0.1:5000. Запустите 'python api_server.py' в папке проекта.");
+      throw new Error(`API сервер недоступен. Проверьте, что Flask API сервер запущен на ${API_BASE_URL}`);
     }
     
     throw error;
@@ -2991,7 +3002,7 @@ async function loadLogisticsFromAPI(deliveryCity, weightKg, declaredValue) {
 
 async function loadExchangeRateFromAPI(silent = true) {
   try {
-    const response = await fetch("http://127.0.0.1:5000/api/exchange-rate", {
+    const response = await fetch(EXCHANGE_RATE_API_URL, {
       method: "GET",
       headers: { "Accept": "application/json" },
       cache: "no-cache"

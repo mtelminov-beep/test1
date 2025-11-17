@@ -1,0 +1,33 @@
+# Конфигурация для Phusion Passenger на хостинге
+# Этот файл должен быть в корне проекта
+
+# Включаем Passenger для Python приложений
+PassengerEnabled On
+# PassengerAppRoot не разрешен в .htaccess на этом хостинге - убран
+# Используем Python из виртуального окружения
+PassengerPython /var/www/u3330187/data/calcenv/bin/python
+PassengerAppType wsgi
+PassengerStartupFile passenger_wsgi.py
+
+# Настройки для статических файлов
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Статические файлы отдаем напрямую
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+    
+    # API запросы обрабатываются через Passenger
+    # Статические файлы (HTML, CSS, JS, изображения) отдаются напрямую
+</IfModule>
+
+# Кеширование статических файлов
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+</IfModule>
+

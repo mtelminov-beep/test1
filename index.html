@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Светодиодный экран ММВС — Qiangli / Novastar</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="branding">
+        <img src="logo.png" alt="Логотип ММВС" class="app-logo" />
+        <div>
+          <h1>Светодиодный экран ММВС</h1>
+        </div>
+      </div>
+      <button id="reset-button" class="ghost-button" type="button">
+        Сбросить к исходным значениям
+      </button>
+    </header>
+
+    <main class="layout">
+      <section class="panel account-panel">
+        <h2>Личный кабинет</h2>
+        <div class="account-layout">
+          <div id="auth-forms" class="auth-forms">
+            <form id="login-form" class="auth-form">
+              <h3>Вход</h3>
+              <label class="field">
+                <span>Логин или email</span>
+                <input
+                  type="text"
+                  name="email"
+                  required
+                  placeholder="admin или user@example.com"
+                  autocomplete="username"
+                />
+              </label>
+              <label class="field">
+                <span>Пароль</span>
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  placeholder="••••••"
+                  autocomplete="current-password"
+                />
+              </label>
+              <button type="submit" class="primary-button">Войти</button>
+              <p class="hint">Администратор: admin / admin</p>
+            </form>
+            <form id="register-form" class="auth-form">
+              <h3>Регистрация</h3>
+              <label class="field">
+                <span>Имя</span>
+                <input type="text" name="name" required placeholder="Иван Иванов" autocomplete="name" />
+              </label>
+              <label class="field">
+                <span>Email</span>
+                <input type="email" name="email" required placeholder="user@example.com" autocomplete="email" />
+              </label>
+              <label class="field">
+                <span>Пароль</span>
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  minlength="4"
+                  placeholder="минимум 4 символа"
+                  autocomplete="new-password"
+                />
+              </label>
+              <button type="submit" class="ghost-button">Создать аккаунт</button>
+            </form>
+          </div>
+          <div id="user-area" class="user-area" hidden>
+            <div class="user-header">
+              <div>
+                <p id="user-name" class="user-name"></p>
+                <p id="user-email" class="user-email"></p>
+              </div>
+              <div class="user-actions">
+                <button id="open-history" type="button" class="ghost-button">История расчётов</button>
+                <button id="save-calculation" type="button" class="primary-button">Сохранить расчёт</button>
+                <button id="export-user-data" type="button" class="ghost-button" title="Экспорт всех данных пользователя в JSON файл">Экспорт данных</button>
+                <label class="ghost-button" style="cursor: pointer;" title="Импорт данных пользователя из JSON файла">
+                  Импорт данных
+                  <input type="file" id="import-user-data" accept=".json" style="display: none;" />
+                </label>
+                <button id="logout-button" type="button" class="ghost-button">Выйти</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" data-view="calc">
+        <h2>Параметры расчёта</h2>
+        <form id="config-form" class="form-grid">
+          <fieldset>
+            <legend>Выбор конфигурации</legend>
+            <label class="field">
+              <span>Наименование организации</span>
+              <input
+                type="text"
+                placeholder='Например, ООО "Интегратор"'
+                data-state-key="organisation"
+              />
+            </label>
+            <label class="field">
+              <span>ИНН</span>
+              <input
+                type="text"
+                placeholder="7701234567"
+                data-state-key="taxId"
+              />
+            </label>
+            <label class="field">
+              <span>Куда (город доставки)</span>
+              <input
+                type="text"
+                placeholder="Например, Москва"
+                data-state-key="deliveryCity"
+              />
+            </label>
+            <label class="field">
+              <span>Исполнение</span>
+              <select data-state-key="execution" data-options="execution"></select>
+            </label>
+            <label class="field">
+              <span>Герцовка, Гц</span>
+              <select data-state-key="refreshRate" data-options="refreshRate"></select>
+            </label>
+            <label class="field">
+              <span>Технология</span>
+              <select data-state-key="technology" data-options="technology"></select>
+            </label>
+            <label class="field">
+              <span>Обслуживание</span>
+              <select data-state-key="serviceType" data-options="service"></select>
+            </label>
+            <label class="field">
+              <span>Кабинет</span>
+              <select data-state-key="cabinetId" data-options="cabinet"></select>
+            </label>
+            <label class="field">
+              <span>Шаг пикселя, мм</span>
+              <select data-state-key="moduleId" data-options="pixelPitch"></select>
+            </label>
+            <label class="field">
+              <span>Размер места под экран (Ш), мм</span>
+              <input
+                type="number"
+                min="1"
+                step="1"
+                placeholder="Например, 3840"
+                data-state-key="siteWidth"
+              />
+            </label>
+            <label class="field">
+              <span>Размер места под экран (В), мм</span>
+              <input
+                type="number"
+                min="1"
+                step="1"
+                placeholder="Например, 2160"
+                data-state-key="siteHeight"
+              />
+            </label>
+            <label class="field">
+              <span>Логистика, руб.</span>
+              <input
+                type="number"
+                min="0"
+                step="100"
+                placeholder="Рассчитывается автоматически"
+                data-state-key="logisticsRub"
+                readonly
+                style="background-color: #f5f5f5; cursor: not-allowed;"
+                title="Логистика рассчитывается автоматически при нажатии кнопки 'Рассчитать'"
+              />
+            </label>
+            <label class="field">
+              <span>Монтажные и сборочные работы, руб.</span>
+              <input
+                type="number"
+                min="0"
+                step="100"
+                placeholder="Рассчитывается автоматически"
+                data-state-key="installationRub"
+                readonly
+                style="background-color: #f5f5f5; cursor: not-allowed;"
+                title="Монтажные и сборочные работы рассчитываются автоматически: площадь экрана × 5 440 руб."
+              />
+            </label>
+            <label class="field">
+              <span>НДС</span>
+              <select data-state-key="vatRate" data-options="vat"></select>
+            </label>
+            <label class="field">
+              <span>Курс, руб./$</span>
+              <input
+                type="text"
+                data-state-key="exchangeRate"
+                readonly
+                style="background-color: #f5f5f5; cursor: not-allowed; text-align: left;"
+                title="Курс загружается автоматически с сайта Банка России (+3%)"
+                inputmode="decimal"
+              />
+            </label>
+            <div class="form-actions">
+              <button id="calculate-button" class="primary-button" type="button">
+                Рассчитать
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </section>
+
+      <section class="panel" data-view="calc">
+        <h2>Рассчитанные параметры</h2>
+        <div class="derived-grid" id="derived-grid"></div>
+        <div id="warnings" class="warnings"></div>
+      </section>
+
+      <section class="panel" data-view="calc">
+        <div class="panel-heading">
+          <h2>Спецификация и стоимость</h2>
+          <div class="panel-actions">
+            <button id="export-csv" class="ghost-button" type="button">Экспорт CSV</button>
+            <button id="export-word" class="ghost-button" type="button">Экспорт Word</button>
+            <button id="export-pdf" class="ghost-button" type="button">Экспорт PDF</button>
+            <button id="copy-summary" class="ghost-button" type="button">Скопировать итоги</button>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table id="components-table">
+            <thead>
+              <tr>
+                <th>№</th>
+                <th>Модель</th>
+                <th>Описание</th>
+                <th>Цена, $</th>
+                <th>Цена, руб.</th>
+                <th>Кол-во, шт.</th>
+                <th>Сумма, руб.</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3">Итого</td>
+                <td id="total-usd" data-cell="usd"></td>
+                <td></td>
+                <td id="total-qty"></td>
+                <td id="total-rub" data-cell="rub"></td>
+              </tr>
+              <tr>
+                <td colspan="7" id="footnote"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel" data-view="calc">
+        <h2>Комментарии</h2>
+        <textarea id="notes" rows="4" placeholder="Комментарии к расчёту..."></textarea>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>© 2025 Светодиодный экран ММВС. Версия <span id="app-version"></span></p>
+    </footer>
+
+    <template id="derived-item-template">
+      <div class="derived-item">
+        <p class="derived-label"></p>
+        <p class="derived-value"></p>
+        <p class="derived-sub"></p>
+      </div>
+    </template>
+
+    <script type="module" src="app.js?v=1.9.0"></script>
+  </body>
+</html>
+
